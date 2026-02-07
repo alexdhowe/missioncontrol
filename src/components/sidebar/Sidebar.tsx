@@ -1,0 +1,108 @@
+import { useNavigate, useLocation } from 'react-router-dom'
+import { Plus, FileText, Star, LogOut, Search } from 'lucide-react'
+import { usePagesStore } from '../../stores/pages'
+import { useAuthStore } from '../../stores/auth'
+import PageTreeItem from './PageTreeItem'
+
+interface SidebarProps {
+  onClose: () => void
+}
+
+export default function Sidebar({ onClose }: SidebarProps) {
+  const navigate = useNavigate()
+  const location = useLocation()
+  const { pages, createPage, getPageTree } = usePagesStore()
+  const { user, logout } = useAuthStore()
+  const tree = getPageTree()
+  const favorites = pages.filter((p) => p.isFavorite)
+
+  const handleCreatePage = async () => {
+    const page = await createPage({ title: 'Untitled' })
+    navigate(`/page/${page.id}`)
+  }
+
+  const handleLogout = async () => {
+    await logout()
+    navigate('/login')
+  }
+
+  const currentPageId = location.pathname.startsWith('/page/')
+    ? location.pathname.split('/page/')[1]
+    : null
+
+  return (
+    <aside className="w-sidebar h-screen flex flex-col bg-sidebar border-r border-gray-200 shrink-0">
+      {/* Workspace header */}
+      <div className="h-11 flex items-center justify-between px-3 border-b border-gray-200">
+        <span className="font-semibold text-sm truncate">Mission Control</span>
+      </div>
+
+      {/* Content */}
+      <div className="flex-1 overflow-y-auto py-2">
+        {/* Favorites */}
+        {favorites.length > 0 && (
+          <div className="mb-3">
+            <div className="flex items-center gap-1 px-3 py-1 text-xs font-medium text-gray-400 uppercase tracking-wider">
+              <Star size={12} />
+              <span>Favorites</span>
+            </div>
+            {favorites.map((page) => (
+              <PageTreeItem
+                key={page.id}
+                page={{ ...page, children: [] }}
+                depth={0}
+                activeId={currentPageId}
+              />
+            ))}
+          </div>
+        )}
+
+        {/* Pages */}
+        <div>
+          <div className="flex items-center justify-between px-3 py-1">
+            <span className="text-xs font-medium text-gray-400 uppercase tracking-wider">
+              Pages
+            </span>
+            <button
+              onClick={handleCreatePage}
+              className="p-0.5 rounded hover:bg-gray-200 text-gray-400 hover:text-gray-600"
+              title="New page"
+            >
+              <Plus size={14} />
+            </button>
+          </div>
+          {tree.length === 0 ? (
+            <p className="px-3 py-2 text-sm text-gray-400">No pages yet</p>
+          ) : (
+            tree.map((node) => (
+              <PageTreeItem
+                key={node.id}
+                page={node}
+                depth={0}
+                activeId={currentPageId}
+              />
+            ))
+          )}
+        </div>
+      </div>
+
+      {/* Footer */}
+      <div className="border-t border-gray-200 p-2">
+        <button
+          onClick={handleCreatePage}
+          className="flex items-center gap-2 w-full px-2 py-1.5 text-sm text-gray-600 rounded hover:bg-gray-200"
+        >
+          <Plus size={16} />
+          <span>New page</span>
+        </button>
+        <button
+          onClick={handleLogout}
+          className="flex items-center gap-2 w-full px-2 py-1.5 text-sm text-gray-400 rounded hover:bg-gray-200 hover:text-gray-600"
+        >
+          <LogOut size={16} />
+          <span>Log out</span>
+        </button>
+      </div>
+    </aside>
+  )
+}

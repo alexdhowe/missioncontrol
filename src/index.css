@@ -1,0 +1,123 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-white text-[#1A1A1A];
+  }
+
+  /* Scrollbar styling */
+  ::-webkit-scrollbar {
+    @apply w-1.5;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-gray-300 rounded-full;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-gray-400;
+  }
+}
+
+/* TipTap editor styles */
+.tiptap {
+  @apply outline-none min-h-[200px];
+}
+
+.tiptap > * + * {
+  margin-top: 0.25em;
+}
+
+.tiptap p.is-editor-empty:first-child::before {
+  @apply text-gray-400 float-left h-0 pointer-events-none;
+  content: attr(data-placeholder);
+}
+
+.tiptap h1 {
+  @apply text-3xl font-bold mt-8 mb-2;
+}
+
+.tiptap h2 {
+  @apply text-2xl font-semibold mt-6 mb-2;
+}
+
+.tiptap h3 {
+  @apply text-xl font-semibold mt-4 mb-1;
+}
+
+.tiptap ul {
+  @apply list-disc pl-6;
+}
+
+.tiptap ol {
+  @apply list-decimal pl-6;
+}
+
+.tiptap li {
+  @apply my-0.5;
+}
+
+.tiptap ul[data-type='taskList'] {
+  @apply list-none pl-0;
+}
+
+.tiptap ul[data-type='taskList'] li {
+  @apply flex items-start gap-2;
+}
+
+.tiptap ul[data-type='taskList'] li > label {
+  @apply mt-1;
+}
+
+.tiptap ul[data-type='taskList'] li > label input[type='checkbox'] {
+  @apply w-4 h-4 rounded border-gray-300 text-accent cursor-pointer accent-accent;
+}
+
+.tiptap ul[data-type='taskList'] li[data-checked='true'] > div > p {
+  @apply line-through text-gray-400;
+}
+
+.tiptap blockquote {
+  @apply border-l-4 border-gray-300 pl-4 italic text-gray-600;
+}
+
+.tiptap pre {
+  @apply bg-gray-900 text-gray-100 rounded-lg p-4 my-2 overflow-x-auto;
+}
+
+.tiptap pre code {
+  @apply bg-transparent text-inherit text-sm font-mono;
+}
+
+.tiptap code {
+  @apply bg-gray-100 text-pink-600 rounded px-1 py-0.5 text-sm font-mono;
+}
+
+.tiptap hr {
+  @apply border-t border-gray-200 my-4;
+}
+
+.tiptap a {
+  @apply text-accent underline cursor-pointer;
+}
+
+.tiptap img {
+  @apply max-w-full rounded;
+}
+
+.tiptap mark {
+  @apply bg-yellow-200;
+}
+
+/* Callout block */
+.tiptap .callout {
+  @apply bg-blue-50 border-l-4 border-accent rounded-r-lg p-4 my-2;
+}
+
+/* Page title input */
+.page-title {
+  @apply text-4xl font-bold outline-none border-none w-full placeholder-gray-300 resize-none;
+}
