@@ -3,6 +3,7 @@ import { serveStatic } from '@hono/node-server/serve-static'
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 import { logger } from 'hono/logger'
+import { migrate } from './db/migrate.js'
 import authRoutes from './routes/auth.js'
 import pageRoutes from './routes/pages.js'
 
@@ -33,6 +34,14 @@ if (process.env.NODE_ENV === 'production') {
 
 const port = Number(process.env.PORT) || 3000
 
-serve({ fetch: app.fetch, port }, (info) => {
-  console.log(`Server running at http://localhost:${info.port}`)
-})
+// Run migrations then start server
+migrate()
+  .then(() => {
+    serve({ fetch: app.fetch, port }, (info) => {
+      console.log(`Server running at http://localhost:${info.port}`)
+    })
+  })
+  .catch((err) => {
+    console.error('Migration failed:', err)
+    process.exit(1)
+  })
