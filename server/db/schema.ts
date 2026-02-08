@@ -60,3 +60,24 @@ export const pages = pgTable('pages', {
   updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
   archivedAt: timestamp('archived_at', { withTimezone: true }),
 })
+
+export const tasks = pgTable('tasks', {
+  id: text('id').primaryKey(),
+  title: text('title').notNull().default(''),
+  status: text('status').notNull().default('not_started'),
+  priority: text('priority').notNull().default('none'),
+  dueDate: timestamp('due_date', { withTimezone: true }),
+  startDate: timestamp('start_date', { withTimezone: true }),
+  completedAt: timestamp('completed_at', { withTimezone: true }),
+  pageId: text('page_id').references(() => pages.id, { onDelete: 'set null' }),
+  projectId: text('project_id').references(() => pages.id, { onDelete: 'set null' }),
+  workspaceId: text('workspace_id')
+    .references(() => workspaces.id, { onDelete: 'cascade' })
+    .notNull(),
+  sortOrder: integer('sort_order').notNull().default(0),
+  createdBy: text('created_by')
+    .references(() => users.id)
+    .notNull(),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
+})

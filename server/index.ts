@@ -6,6 +6,7 @@ import { logger } from 'hono/logger'
 import { migrate } from './db/migrate.js'
 import authRoutes from './routes/auth.js'
 import pageRoutes from './routes/pages.js'
+import taskRoutes from './routes/tasks.js'
 
 const app = new Hono()
 
@@ -22,6 +23,7 @@ app.use(
 // API routes
 app.route('/api/auth', authRoutes)
 app.route('/api/pages', pageRoutes)
+app.route('/api/tasks', taskRoutes)
 
 // Health check
 app.get('/api/health', (c) => c.json({ ok: true }))

@@ -1,10 +1,12 @@
 import { useEffect } from 'react'
-import { Routes, Route, Navigate } from 'react-router-dom'
+import { Routes, Route, Navigate, useNavigate } from 'react-router-dom'
 import { useAuthStore } from './stores/auth'
+import { usePagesStore } from './stores/pages'
 import AppLayout from './components/layout/AppLayout'
 import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
 import PageView from './pages/PageView'
+import TasksPage from './pages/TasksPage'
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user, initialized } = useAuthStore()
@@ -42,7 +44,9 @@ export default function App() {
             <AppLayout>
               <Routes>
                 <Route path="page/:id" element={<PageView />} />
-                <Route path="*" element={<EmptyState />} />
+                <Route path="tasks" element={<TasksPage />} />
+                <Route path="" element={<AutoNavigate />} />
+                <Route path="*" element={<AutoNavigate />} />
               </Routes>
             </AppLayout>
           </ProtectedRoute>
@@ -52,10 +56,23 @@ export default function App() {
   )
 }
 
-function EmptyState() {
-  return (
-    <div className="flex flex-col items-center justify-center h-full text-gray-400">
-      <p className="text-lg">Select a page or create a new one</p>
-    </div>
-  )
+function AutoNavigate() {
+  const navigate = useNavigate()
+  const pages = usePagesStore((s) => s.pages)
+
+  useEffect(() => {
+    if (pages.length > 0) {
+      navigate(`/page/${pages[0].id}`, { replace: true })
+    }
+  }, [pages, navigate])
+
+  if (pages.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full text-gray-400">
+        <p className="text-lg">Create your first page to get started</p>
+      </div>
+    )
+  }
+
+  return null
 }

@@ -2,11 +2,13 @@ import { useState, useEffect } from 'react'
 import Sidebar from '../sidebar/Sidebar'
 import TopBar from './TopBar'
 import CommandPalette from '../CommandPalette'
+import QuickTaskCreator from '../tasks/QuickTaskCreator'
 import { usePagesStore } from '../../stores/pages'
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(true)
   const [commandPaletteOpen, setCommandPaletteOpen] = useState(false)
+  const [quickTaskOpen, setQuickTaskOpen] = useState(false)
   const fetchPages = usePagesStore((s) => s.fetchPages)
 
   useEffect(() => {
@@ -18,6 +20,10 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
         e.preventDefault()
         setCommandPaletteOpen(true)
+      }
+      if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key === 'p') {
+        e.preventDefault()
+        setQuickTaskOpen(true)
       }
     }
     document.addEventListener('keydown', handleKeyDown)
@@ -38,6 +44,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
       {commandPaletteOpen && (
         <CommandPalette onClose={() => setCommandPaletteOpen(false)} />
+      )}
+      {quickTaskOpen && (
+        <QuickTaskCreator onClose={() => setQuickTaskOpen(false)} />
       )}
     </div>
   )

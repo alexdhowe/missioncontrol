@@ -56,6 +56,23 @@ export async function migrate() {
         updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
         archived_at TIMESTAMPTZ
       );
+
+      CREATE TABLE IF NOT EXISTS tasks (
+        id TEXT PRIMARY KEY,
+        title TEXT NOT NULL DEFAULT '',
+        status TEXT NOT NULL DEFAULT 'not_started',
+        priority TEXT NOT NULL DEFAULT 'none',
+        due_date TIMESTAMPTZ,
+        start_date TIMESTAMPTZ,
+        completed_at TIMESTAMPTZ,
+        page_id TEXT REFERENCES pages(id) ON DELETE SET NULL,
+        project_id TEXT REFERENCES pages(id) ON DELETE SET NULL,
+        workspace_id TEXT NOT NULL REFERENCES workspaces(id) ON DELETE CASCADE,
+        sort_order INTEGER NOT NULL DEFAULT 0,
+        created_by TEXT NOT NULL REFERENCES users(id),
+        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+        updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+      );
     `)
     console.log('Database tables ready')
   } finally {

@@ -1,5 +1,5 @@
 import { useNavigate, useLocation } from 'react-router-dom'
-import { Plus, FileText, Star, LogOut, Search } from 'lucide-react'
+import { Plus, FileText, Star, LogOut, CheckSquare, Inbox } from 'lucide-react'
 import { usePagesStore } from '../../stores/pages'
 import { useAuthStore } from '../../stores/auth'
 import PageTreeItem from './PageTreeItem'
@@ -39,6 +39,19 @@ export default function Sidebar({ onClose }: SidebarProps) {
 
       {/* Content */}
       <div className="flex-1 overflow-y-auto py-2">
+        {/* Global views */}
+        <div className="mb-3 px-1">
+          <button
+            onClick={() => navigate('/tasks')}
+            className={`flex items-center gap-2 w-full px-2 py-1.5 text-sm rounded hover:bg-gray-200/70 ${
+              location.pathname === '/tasks' ? 'bg-gray-200 font-medium' : 'text-gray-600'
+            }`}
+          >
+            <CheckSquare size={16} className="text-gray-400" />
+            Tasks
+          </button>
+        </div>
+
         {/* Favorites */}
         {favorites.length > 0 && (
           <div className="mb-3">

@@ -1,4 +1,4 @@
-import type { User, Page, PageMeta } from '../types'
+import type { User, Page, PageMeta, Task } from '../types'
 
 const BASE = '/api'
 
@@ -74,6 +74,31 @@ export const api = {
     },
     delete(id: string) {
       return request<{ ok: boolean }>(`/pages/${id}`, { method: 'DELETE' })
+    },
+  },
+
+  tasks: {
+    list(params?: Record<string, string>) {
+      const qs = params ? '?' + new URLSearchParams(params).toString() : ''
+      return request<Task[]>(`/tasks${qs}`)
+    },
+    get(id: string) {
+      return request<Task>(`/tasks/${id}`)
+    },
+    create(data: Partial<Task>) {
+      return request<Task>('/tasks', {
+        method: 'POST',
+        body: JSON.stringify(data),
+      })
+    },
+    update(id: string, data: Partial<Task>) {
+      return request<Task>(`/tasks/${id}`, {
+        method: 'PATCH',
+        body: JSON.stringify(data),
+      })
+    },
+    delete(id: string) {
+      return request<{ ok: boolean }>(`/tasks/${id}`, { method: 'DELETE' })
     },
   },
 }
