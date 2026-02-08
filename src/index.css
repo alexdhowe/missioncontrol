@@ -207,8 +207,95 @@
 }
 .tiptap a:hover { color: #A5B4FC; }
 
-.tiptap img { @apply max-w-full rounded-xl; }
 .tiptap mark { background: rgba(250,204,21,0.2); color: #FDE68A; }
+
+/* Toggle / Details block */
+.tiptap details.toggle-block {
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 12px;
+  margin: 0.5rem 0;
+  overflow: hidden;
+}
+.tiptap details.toggle-block summary {
+  cursor: pointer;
+  padding: 0.5rem 0.75rem;
+  font-weight: 500;
+  color: rgba(255,255,255,0.88);
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.tiptap details.toggle-block summary::before {
+  content: '\25B6';
+  font-size: 0.6em;
+  transition: transform 0.2s ease;
+  color: rgba(255,255,255,0.3);
+}
+.tiptap details.toggle-block[open] summary::before {
+  transform: rotate(90deg);
+}
+.tiptap details.toggle-block > div[data-details-content] {
+  padding: 0 0.75rem 0.75rem;
+  border-top: 1px solid rgba(255,255,255,0.04);
+}
+
+/* Callout block */
+.tiptap div[data-callout] {
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+  margin: 0.5rem 0;
+}
+.tiptap div[data-callout][data-variant="info"] {
+  background: rgba(91,110,245,0.08);
+  border-left: 3px solid rgba(91,110,245,0.4);
+}
+.tiptap div[data-callout][data-variant="warning"] {
+  background: rgba(251,191,36,0.08);
+  border-left: 3px solid rgba(251,191,36,0.4);
+}
+.tiptap div[data-callout][data-variant="success"] {
+  background: rgba(74,222,128,0.08);
+  border-left: 3px solid rgba(74,222,128,0.4);
+}
+.tiptap div[data-callout][data-variant="error"] {
+  background: rgba(251,113,133,0.08);
+  border-left: 3px solid rgba(251,113,133,0.4);
+}
+
+/* Table */
+.tiptap table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 0.5rem 0;
+  border-radius: 12px;
+  overflow: hidden;
+}
+.tiptap table th,
+.tiptap table td {
+  border: 1px solid rgba(255,255,255,0.06);
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+  min-width: 80px;
+}
+.tiptap table th {
+  background: rgba(255,255,255,0.04);
+  font-weight: 500;
+  color: rgba(255,255,255,0.7);
+  font-size: 0.85em;
+}
+.tiptap table td {
+  color: rgba(255,255,255,0.75);
+}
+.tiptap table tr:hover td {
+  background: rgba(255,255,255,0.02);
+}
+
+/* Image */
+.tiptap img {
+  @apply max-w-full rounded-xl;
+  margin: 0.5rem 0;
+}
 
 /* ───────────── Page Title ───────────── */
 .page-title {

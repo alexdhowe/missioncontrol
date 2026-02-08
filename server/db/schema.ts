@@ -75,6 +75,8 @@ export const tasks = pgTable('tasks', {
     .references(() => workspaces.id, { onDelete: 'cascade' })
     .notNull(),
   sortOrder: integer('sort_order').notNull().default(0),
+  tags: text('tags').array(),
+  parentTaskId: text('parent_task_id'),
   createdBy: text('created_by')
     .references(() => users.id)
     .notNull(),

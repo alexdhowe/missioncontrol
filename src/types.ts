@@ -46,6 +46,8 @@ export interface Task {
   projectId: string | null
   workspaceId: string
   sortOrder: number
+  tags: string[] | null
+  parentTaskId: string | null
   createdBy: string
   createdAt: string
   updatedAt: string

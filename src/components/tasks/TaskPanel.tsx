@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { X, Trash2 } from 'lucide-react'
+import { X, Trash2, Circle, CheckCircle2, Plus } from 'lucide-react'
 import { useTasksStore } from '../../stores/tasks'
 import type { TaskStatus, TaskPriority } from '../../types'
 import { TASK_STATUS_LABELS, TASK_PRIORITY_LABELS } from '../../types'
@@ -14,10 +14,19 @@ export default function TaskPanel({ taskId, onClose }: TaskPanelProps) {
   const task = tasks.find((t) => t.id === taskId)
   const [title, setTitle] = useState('')
   const [titleTimer, setTitleTimer] = useState<ReturnType<typeof setTimeout> | null>(null)
+  const [subtasks, setSubtasks] = useState<any[]>([])
+  const [newSubtaskTitle, setNewSubtaskTitle] = useState('')
 
   useEffect(() => {
     if (task) setTitle(task.title)
   }, [taskId, task?.title])
+
+  useEffect(() => {
+    fetch(`/api/tasks/subtasks/${taskId}`, { credentials: 'include' })
+      .then((r) => r.json())
+      .then((data) => setSubtasks(Array.isArray(data) ? data : []))
+      .catch(() => setSubtasks([]))
+  }, [taskId])
 
   if (!task) return null
 
@@ -123,6 +132,107 @@ export default function TaskPanel({ taskId, onClose }: TaskPanelProps) {
               }
               className="input-glass flex-1"
             />
+          </div>
+
+          {/* Tags */}
+          <div className="flex items-start gap-3">
+            <label className="text-sm text-white/35 w-20 shrink-0 mt-2">Tags</label>
+            <div className="flex-1">
+              <div className="flex flex-wrap gap-1.5 mb-2">
+                {(task.tags || []).map((tag) => (
+                  <span
+                    key={tag}
+                    className="inline-flex items-center gap-1 bg-white/[0.06] text-white/60 rounded-full px-2.5 py-0.5 text-xs"
+                  >
+                    {tag}
+                    <button
+                      onClick={() => {
+                        const newTags = (task.tags || []).filter((t) => t !== tag)
+                        updateTask(taskId, { tags: newTags } as any)
+                      }}
+                      className="text-white/25 hover:text-white/50 transition-colors"
+                    >
+                      ×
+                    </button>
+                  </span>
+                ))}
+              </div>
+              <input
+                type="text"
+                placeholder="Add tag..."
+                className="input-glass text-xs w-full"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    const value = (e.target as HTMLInputElement).value.trim()
+                    if (value && !(task.tags || []).includes(value)) {
+                      updateTask(taskId, { tags: [...(task.tags || []), value] } as any)
+                    }
+                    ;(e.target as HTMLInputElement).value = ''
+                  }
+                }}
+              />
+            </div>
+          </div>
+
+          {/* Subtasks */}
+          <div className="flex items-start gap-3 mt-1">
+            <label className="text-sm text-white/35 w-20 shrink-0 mt-1">Subtasks</label>
+            <div className="flex-1 space-y-1">
+              {subtasks.map((sub) => (
+                <div key={sub.id} className="flex items-center gap-2 group">
+                  <button
+                    onClick={async () => {
+                      const newStatus = sub.status === 'done' ? 'not_started' : 'done'
+                      await fetch(`/api/tasks/${sub.id}`, {
+                        method: 'PATCH',
+                        credentials: 'include',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ status: newStatus }),
+                      })
+                      setSubtasks((prev) =>
+                        prev.map((s) => (s.id === sub.id ? { ...s, status: newStatus } : s))
+                      )
+                    }}
+                    className="shrink-0"
+                  >
+                    {sub.status === 'done' ? (
+                      <CheckCircle2 size={14} className="text-emerald-400" />
+                    ) : (
+                      <Circle size={14} className="text-white/25" />
+                    )}
+                  </button>
+                  <span className={`text-sm ${sub.status === 'done' ? 'line-through text-white/25' : 'text-white/70'}`}>
+                    {sub.title || 'Untitled'}
+                  </span>
+                </div>
+              ))}
+              <div className="flex items-center gap-2 mt-1">
+                <Plus size={14} className="text-white/20 shrink-0" />
+                <input
+                  type="text"
+                  value={newSubtaskTitle}
+                  onChange={(e) => setNewSubtaskTitle(e.target.value)}
+                  placeholder="Add subtask..."
+                  className="bg-transparent text-sm text-white/60 placeholder-white/20 outline-none flex-1"
+                  onKeyDown={async (e) => {
+                    if (e.key === 'Enter' && newSubtaskTitle.trim()) {
+                      const res = await fetch('/api/tasks', {
+                        method: 'POST',
+                        credentials: 'include',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                          title: newSubtaskTitle.trim(),
+                          parentTaskId: taskId,
+                        }),
+                      })
+                      const sub = await res.json()
+                      setSubtasks((prev) => [...prev, sub])
+                      setNewSubtaskTitle('')
+                    }
+                  }}
+                />
+              </div>
+            </div>
           </div>
         </div>
 

@@ -84,6 +84,15 @@ export async function migrate() {
       );
     `)
     console.log('Database tables ready')
+
+    try {
+      await pool.query(`
+        ALTER TABLE tasks ADD COLUMN IF NOT EXISTS tags TEXT[];
+        ALTER TABLE tasks ADD COLUMN IF NOT EXISTS parent_task_id TEXT;
+      `)
+    } catch {
+      // columns may already exist
+    }
   } finally {
     await pool.end()
   }

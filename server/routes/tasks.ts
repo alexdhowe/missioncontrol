@@ -137,6 +137,20 @@ tasks.get('/', async (c) => {
   return c.json(allTasks)
 })
 
+// Get subtasks for a task
+tasks.get('/subtasks/:parentId', async (c) => {
+  const parentId = c.req.param('parentId')
+  const workspaceId = c.get('workspaceId')
+
+  const subtasks = await db
+    .select()
+    .from(schema.tasks)
+    .where(and(eq(schema.tasks.parentTaskId, parentId), eq(schema.tasks.workspaceId, workspaceId)))
+    .orderBy(asc(schema.tasks.sortOrder))
+
+  return c.json(subtasks)
+})
+
 // Get single task
 tasks.get('/:id', async (c) => {
   const taskId = c.req.param('id')
@@ -180,6 +194,8 @@ tasks.post('/', async (c) => {
       projectId: body.projectId || null,
       workspaceId,
       sortOrder: (last?.sortOrder ?? -1) + 1,
+      tags: body.tags || [],
+      parentTaskId: body.parentTaskId || null,
       createdBy: userId,
     })
     .returning()
@@ -207,6 +223,8 @@ tasks.patch('/:id', async (c) => {
   if (body.pageId !== undefined) updates.pageId = body.pageId || null
   if (body.projectId !== undefined) updates.projectId = body.projectId || null
   if (body.sortOrder !== undefined) updates.sortOrder = body.sortOrder
+  if (body.tags !== undefined) updates.tags = body.tags
+  if (body.parentTaskId !== undefined) updates.parentTaskId = body.parentTaskId || null
 
   const [task] = await db
     .update(schema.tasks)

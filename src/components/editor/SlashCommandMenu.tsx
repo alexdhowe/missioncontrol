@@ -17,6 +17,10 @@ import {
   Code,
   Minus,
   AlertCircle,
+  ToggleRight,
+  Info,
+  Table2,
+  ImageIcon,
 } from 'lucide-react'
 import type { SlashCommandItem } from './extensions/SlashCommand'
 
@@ -94,6 +98,41 @@ const ITEMS: SlashCommandItem[] = [
     },
   },
   {
+    title: 'Toggle',
+    description: 'Collapsible content',
+    icon: 'ToggleRight',
+    command: ({ editor, range }) => {
+      editor.chain().focus().deleteRange(range).setToggle().run()
+    },
+  },
+  {
+    title: 'Callout',
+    description: 'Highlighted info block',
+    icon: 'Info',
+    command: ({ editor, range }) => {
+      editor.chain().focus().deleteRange(range).setCallout({ variant: 'info' }).run()
+    },
+  },
+  {
+    title: 'Table',
+    description: '3x3 table',
+    icon: 'Table2',
+    command: ({ editor, range }) => {
+      editor.chain().focus().deleteRange(range).insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run()
+    },
+  },
+  {
+    title: 'Image',
+    description: 'Embed an image from URL',
+    icon: 'ImageIcon',
+    command: ({ editor, range }) => {
+      const url = window.prompt('Enter image URL:')
+      if (url) {
+        editor.chain().focus().deleteRange(range).setImage({ src: url }).run()
+      }
+    },
+  },
+  {
     title: 'Divider',
     description: 'Horizontal line separator',
     icon: 'Minus',
@@ -115,6 +154,10 @@ const ICON_MAP: Record<string, React.ComponentType<{ size?: number }>> = {
   Code,
   Minus,
   AlertCircle,
+  ToggleRight,
+  Info,
+  Table2,
+  ImageIcon,
 }
 
 interface SlashCommandMenuProps {

@@ -93,6 +93,20 @@ export default function TaskList() {
               {task.title || 'Untitled task'}
             </span>
 
+            {/* Tags */}
+            {task.tags && task.tags.length > 0 && (
+              <div className="hidden sm:flex items-center gap-1 shrink-0">
+                {task.tags.slice(0, 2).map((tag) => (
+                  <span key={tag} className="bg-white/[0.06] text-white/40 rounded-full px-2 py-0.5 text-[10px]">
+                    {tag}
+                  </span>
+                ))}
+                {task.tags.length > 2 && (
+                  <span className="text-white/20 text-[10px]">+{task.tags.length - 2}</span>
+                )}
+              </div>
+            )}
+
             {/* Priority flag */}
             {task.priority !== 'none' && (
               <Flag size={14} className={`shrink-0 ${PRIORITY_COLORS[task.priority]}`} />

@@ -68,6 +68,14 @@ export default function PageView() {
     [id, updatePage]
   )
 
+  const handleSearchPages = async (query: string) => {
+    const pages = usePagesStore.getState().pages
+    const filtered = query.trim()
+      ? pages.filter((p) => p.title.toLowerCase().includes(query.toLowerCase()))
+      : pages.slice(0, 8)
+    return filtered.map((p) => ({ id: p.id, title: p.title, icon: p.icon }))
+  }
+
   const handleLinkSelect = (page: { id: string; title: string }) => {
     setShowLinkPicker(false)
     // Insert a link at the current cursor position in the editor
@@ -110,6 +118,7 @@ export default function PageView() {
           onEditorReady={(editor) => {
             editorRef.current = editor
           }}
+          onSearchPages={handleSearchPages}
         />
       </div>
 

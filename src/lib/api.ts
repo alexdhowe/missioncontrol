@@ -109,6 +109,9 @@ export const api = {
     delete(id: string) {
       return request<{ ok: boolean }>(`/tasks/${id}`, { method: 'DELETE' })
     },
+    subtasks(parentId: string) {
+      return request<Task[]>(`/tasks/subtasks/${parentId}`)
+    },
     stats() {
       return request<{
         total: number
