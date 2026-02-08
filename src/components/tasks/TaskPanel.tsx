@@ -46,7 +46,7 @@ export default function TaskPanel({ taskId, onClose }: TaskPanelProps) {
   }
 
   return (
-    <div className="w-panel border-l border-white/[0.06] glass shrink-0 flex flex-col h-full overflow-y-auto animate-slide-in-right">
+    <div className="fixed inset-0 z-40 md:relative md:inset-auto md:z-auto w-full md:w-panel border-l border-white/[0.06] glass shrink-0 flex flex-col h-full overflow-y-auto animate-slide-in-right">
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-3 border-b border-white/[0.06]">
         <span className="text-sm font-medium text-white/40">Task Details</span>

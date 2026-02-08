@@ -45,7 +45,7 @@ export default function Sidebar({ onClose }: SidebarProps) {
 
   return (
     <>
-    <aside className="glass w-sidebar h-screen flex flex-col shrink-0">
+    <aside className="glass w-full h-full flex flex-col shrink-0 md:w-sidebar">
       {/* Workspace header */}
       <div className="h-11 flex items-center justify-between px-3 border-b border-white/[0.06]">
         <span className="text-white/90 font-semibold text-sm truncate">Mission Control</span>

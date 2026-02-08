@@ -35,7 +35,7 @@ export default function TasksPage() {
   return (
     <div className="flex h-full animate-fade-in">
       <div className="flex-1 overflow-y-auto">
-        <div className="max-w-5xl mx-auto px-6 py-8">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
           {/* Header */}
           <div className="flex items-center justify-between mb-6">
             <h1 className="text-2xl font-semibold text-white/95">Tasks</h1>
@@ -49,11 +49,11 @@ export default function TasksPage() {
           </div>
 
           {/* Filters + View Toggle */}
-          <div className="flex items-center gap-3 mb-4">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-4">
             <select
               value={statusFilter}
               onChange={(e) => handleFilterChange(e.target.value, priorityFilter)}
-              className="select-glass"
+              className="select-glass text-xs sm:text-sm"
             >
               <option value="all">All Status</option>
               <option value="not_started">Not Started</option>
@@ -66,7 +66,7 @@ export default function TasksPage() {
             <select
               value={priorityFilter}
               onChange={(e) => handleFilterChange(statusFilter, e.target.value)}
-              className="select-glass"
+              className="select-glass text-xs sm:text-sm"
             >
               <option value="all">All Priority</option>
               <option value="urgent">Urgent</option>
@@ -87,12 +87,12 @@ export default function TasksPage() {
                 <button
                   key={key}
                   onClick={() => setView(key)}
-                  className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-sm transition-all duration-200 ${
+                  className={`flex items-center gap-1 px-2 sm:px-2.5 py-1 rounded-lg text-xs sm:text-sm transition-all duration-200 ${
                     view === key ? 'bg-white/[0.1] text-white/90 font-medium' : 'text-white/40 hover:text-white/60'
                   }`}
                 >
                   <Icon size={14} />
-                  {label}
+                  <span className="hidden sm:inline">{label}</span>
                 </button>
               ))}
             </div>
