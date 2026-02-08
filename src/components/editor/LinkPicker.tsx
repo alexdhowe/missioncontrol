@@ -58,10 +58,10 @@ export default function LinkPicker({ onSelect, onClose }: LinkPickerProps) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-center pt-[20vh]">
-      <div className="fixed inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative bg-surface-overlay border border-white/[0.08] rounded-xl shadow-glow-lg w-full max-w-lg overflow-hidden">
-        <div className="flex items-center gap-3 px-4 py-3 border-b border-white/[0.08]">
-          <Link size={18} className="text-gray-500 shrink-0" />
+      <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
+      <div className="relative glass-prominent rounded-2xl w-full max-w-lg overflow-hidden animate-scale-in">
+        <div className="flex items-center gap-3 px-4 py-3 border-b border-white/[0.06]">
+          <Link size={18} className="text-white/30 shrink-0" />
           <input
             ref={inputRef}
             type="text"
@@ -69,15 +69,15 @@ export default function LinkPicker({ onSelect, onClose }: LinkPickerProps) {
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="Search pages to link..."
-            className="input-dark flex-1 border-0 bg-transparent px-0"
+            className="flex-1 bg-transparent text-white/90 placeholder-white/25 outline-none text-sm"
           />
-          <kbd className="text-xs bg-white/[0.06] text-gray-500 px-1.5 py-0.5 rounded">
+          <kbd className="text-xs bg-white/[0.06] text-white/25 px-1.5 py-0.5 rounded">
             ESC
           </kbd>
         </div>
         <div ref={listRef} className="max-h-80 overflow-y-auto py-1">
           {results.length === 0 ? (
-            <p className="px-4 py-8 text-center text-sm text-gray-500">
+            <p className="px-4 py-8 text-center text-sm text-white/25">
               No pages found
             </p>
           ) : (
@@ -87,12 +87,12 @@ export default function LinkPicker({ onSelect, onClose }: LinkPickerProps) {
                 onClick={() => handleSelect(page)}
                 className={`flex items-center gap-3 w-full px-4 py-2 text-sm text-left transition-all duration-200 ${
                   i === selectedIndex
-                    ? 'bg-accent/15 text-accent-hover'
-                    : 'text-gray-300 hover:bg-white/[0.06]'
+                    ? 'bg-accent/[0.1] text-accent-hover'
+                    : 'text-white/70 hover:bg-white/[0.05]'
                 }`}
               >
                 <span className="shrink-0">
-                  {page.icon || <FileText size={16} className="text-gray-500" />}
+                  {page.icon || <FileText size={16} className="text-white/25" />}
                 </span>
                 <span className="truncate">{page.title || 'Untitled'}</span>
               </button>

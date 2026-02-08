@@ -41,7 +41,7 @@ export default function Editor({
       Underline,
       Link.configure({
         openOnClick: true,
-        HTMLAttributes: { class: 'text-accent hover:text-accent-hover underline cursor-pointer transition-colors' },
+        HTMLAttributes: { class: 'text-[#7B8CF8] hover:text-[#A5B4FC] underline cursor-pointer transition-colors' },
       }),
       SlashCommand.configure({
         suggestion: {

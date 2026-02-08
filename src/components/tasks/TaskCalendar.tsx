@@ -6,11 +6,11 @@ import type { Task, TaskPriority } from '../../types'
 const DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 
 const PRIORITY_PILL_COLORS: Record<TaskPriority, string> = {
-  none: 'bg-gray-500/20 text-gray-300',
-  low: 'bg-gray-500/20 text-gray-400',
-  medium: 'bg-yellow-500/20 text-yellow-300',
-  high: 'bg-orange-500/20 text-orange-300',
-  urgent: 'bg-rose-500/20 text-rose-300',
+  none: 'bg-white/[0.08] text-white/60',
+  low: 'bg-blue-500/15 text-blue-300',
+  medium: 'bg-yellow-500/15 text-yellow-300',
+  high: 'bg-orange-500/15 text-orange-300',
+  urgent: 'bg-rose-500/15 text-rose-300',
 }
 
 function getDaysInMonth(year: number, month: number): number {
@@ -92,21 +92,21 @@ export default function TaskCalendar() {
   })
 
   return (
-    <div className="glass-panel overflow-hidden">
+    <div className="glass rounded-2xl overflow-hidden">
       {/* Month Navigation */}
       <div className="flex items-center justify-between px-4 py-3 border-b border-white/[0.06]">
         <button
           onClick={goToPrevMonth}
-          className="p-1 rounded-md hover:bg-white/[0.06] transition-all duration-200"
+          className="p-1 rounded-lg hover:bg-white/[0.06] transition-all duration-200"
         >
-          <ChevronLeft size={18} className="text-gray-500" />
+          <ChevronLeft size={18} className="text-white/40" />
         </button>
-        <h3 className="text-sm font-semibold text-white">{monthLabel}</h3>
+        <h3 className="text-sm font-medium text-white/90">{monthLabel}</h3>
         <button
           onClick={goToNextMonth}
-          className="p-1 rounded-md hover:bg-white/[0.06] transition-all duration-200"
+          className="p-1 rounded-lg hover:bg-white/[0.06] transition-all duration-200"
         >
-          <ChevronRight size={18} className="text-gray-500" />
+          <ChevronRight size={18} className="text-white/40" />
         </button>
       </div>
 
@@ -115,7 +115,7 @@ export default function TaskCalendar() {
         {DAY_NAMES.map((name) => (
           <div
             key={name}
-            className="text-center text-xs font-medium text-gray-500 py-2"
+            className="text-center text-xs font-medium text-white/30 py-2"
           >
             {name}
           </div>
@@ -142,7 +142,7 @@ export default function TaskCalendar() {
             <div
               key={day}
               className={`min-h-[80px] border-b border-r border-white/[0.03] p-1 ${
-                isToday ? 'bg-accent/10' : ''
+                isToday ? 'bg-accent/[0.06]' : ''
               }`}
             >
               {/* Day Number */}
@@ -151,7 +151,7 @@ export default function TaskCalendar() {
                   className={`text-xs w-5 h-5 flex items-center justify-center rounded-full ${
                     isToday
                       ? 'bg-accent text-white font-semibold'
-                      : 'text-gray-500'
+                      : 'text-white/40'
                   }`}
                 >
                   {day}
@@ -173,7 +173,7 @@ export default function TaskCalendar() {
                   </button>
                 ))}
                 {dayTasks.length > 3 && (
-                  <span className="text-[10px] text-gray-500 pl-1">
+                  <span className="text-[10px] text-white/30 pl-1">
                     +{dayTasks.length - 3} more
                   </span>
                 )}

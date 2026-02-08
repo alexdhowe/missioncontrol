@@ -39,12 +39,12 @@ export default function QuickTaskCreator({ onClose }: QuickTaskCreatorProps) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-center pt-[20vh]">
-      <div className="fixed inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative bg-surface-overlay border border-white/[0.08] rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden animate-scale-in">
+      <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
+      <div className="relative glass-prominent rounded-2xl w-full max-w-lg overflow-hidden animate-scale-in">
         <form onSubmit={handleSubmit}>
           <div className="px-4 py-3 border-b border-white/[0.06]">
             <div className="flex items-center gap-3">
-              <Plus size={18} className="text-accent shrink-0" />
+              <Plus size={18} className="text-accent/70 shrink-0" />
               <input
                 ref={inputRef}
                 type="text"
@@ -52,7 +52,7 @@ export default function QuickTaskCreator({ onClose }: QuickTaskCreatorProps) {
                 onChange={(e) => setTitle(e.target.value)}
                 onKeyDown={handleKeyDown}
                 placeholder="What needs to be done?"
-                className="flex-1 outline-none text-sm bg-transparent text-white placeholder-gray-600"
+                className="flex-1 bg-transparent text-white/90 placeholder-white/25 outline-none text-sm"
               />
             </div>
           </div>
@@ -61,7 +61,7 @@ export default function QuickTaskCreator({ onClose }: QuickTaskCreatorProps) {
             <select
               value={priority}
               onChange={(e) => setPriority(e.target.value as TaskPriority)}
-              className="select-dark"
+              className="select-glass"
             >
               <option value="none">No priority</option>
               <option value="low">Low</option>
@@ -74,7 +74,7 @@ export default function QuickTaskCreator({ onClose }: QuickTaskCreatorProps) {
               type="date"
               value={dueDate}
               onChange={(e) => setDueDate(e.target.value)}
-              className="input-dark"
+              className="input-glass"
             />
 
             <div className="flex-1" />
@@ -82,7 +82,7 @@ export default function QuickTaskCreator({ onClose }: QuickTaskCreatorProps) {
             <button
               type="submit"
               disabled={!title.trim()}
-              className="btn-gradient px-3 py-1 rounded-md text-xs font-medium disabled:opacity-50 transition-all duration-200"
+              className="btn-primary px-3 py-1 text-xs disabled:opacity-50 transition-all duration-200"
             >
               Create
             </button>

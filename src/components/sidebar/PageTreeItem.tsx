@@ -52,8 +52,8 @@ export default function PageTreeItem({ page, depth, activeId }: PageTreeItemProp
   return (
     <div>
       <div
-        className={`group flex items-center h-8 cursor-pointer hover:bg-white/[0.06] transition-all duration-200 ${
-          isActive ? 'bg-white/[0.1] text-white' : 'text-gray-300'
+        className={`group flex items-center h-8 cursor-pointer transition-all duration-200 ${
+          isActive ? 'bg-white/[0.08] text-white/95' : 'text-white/70 hover:bg-white/[0.05]'
         }`}
         style={{ paddingLeft: `${depth * 16 + 8}px` }}
         onClick={handleClick}
@@ -61,8 +61,8 @@ export default function PageTreeItem({ page, depth, activeId }: PageTreeItemProp
         {/* Expand toggle */}
         <button
           onClick={handleToggle}
-          className={`p-0.5 rounded hover:bg-white/[0.1] shrink-0 transition-all duration-200 ${
-            hasChildren ? 'text-gray-600' : 'text-transparent'
+          className={`p-0.5 rounded hover:bg-white/[0.08] shrink-0 transition-all duration-200 ${
+            hasChildren ? 'text-white/20' : 'text-transparent'
           }`}
         >
           <ChevronRight
@@ -73,7 +73,7 @@ export default function PageTreeItem({ page, depth, activeId }: PageTreeItemProp
 
         {/* Icon + title */}
         <span className="ml-0.5 mr-1.5 text-sm shrink-0">
-          {page.icon || <FileText size={14} className="text-gray-500" />}
+          {page.icon || <FileText size={14} className="text-white/30" />}
         </span>
         <span className="text-sm truncate flex-1">{page.title || 'Untitled'}</span>
 
@@ -81,7 +81,7 @@ export default function PageTreeItem({ page, depth, activeId }: PageTreeItemProp
         <div className="hidden group-hover:flex items-center gap-0.5 shrink-0 mr-1">
           <button
             onClick={handleAddChild}
-            className="p-0.5 rounded hover:bg-white/[0.1] text-gray-500 transition-all duration-200"
+            className="p-0.5 rounded hover:bg-white/[0.08] text-white/25 hover:text-white/50 transition-all duration-200"
             title="Add subpage"
           >
             <Plus size={14} />
@@ -92,24 +92,24 @@ export default function PageTreeItem({ page, depth, activeId }: PageTreeItemProp
                 e.stopPropagation()
                 setShowMenu(!showMenu)
               }}
-              className="p-0.5 rounded hover:bg-white/[0.1] text-gray-500 transition-all duration-200"
+              className="p-0.5 rounded hover:bg-white/[0.08] text-white/25 hover:text-white/50 transition-all duration-200"
             >
               <MoreHorizontal size={14} />
             </button>
             {showMenu && (
               <>
                 <div className="fixed inset-0 z-10" onClick={() => setShowMenu(false)} />
-                <div className="absolute right-0 top-6 z-20 bg-surface-overlay border border-white/[0.08] rounded-lg shadow-glow-lg py-1 w-40">
+                <div className="absolute right-0 top-6 z-20 glass-prominent rounded-xl py-1 w-40">
                   <button
                     onClick={handleToggleFavorite}
-                    className="flex items-center gap-2 w-full px-3 py-1.5 text-sm hover:bg-white/[0.06] text-gray-300 text-left transition-all duration-200"
+                    className="flex items-center gap-2 w-full px-3 py-1.5 text-sm hover:bg-white/[0.06] text-white/70 text-left transition-all duration-200"
                   >
                     <Star size={14} />
                     {page.isFavorite ? 'Unfavorite' : 'Favorite'}
                   </button>
                   <button
                     onClick={handleDelete}
-                    className="flex items-center gap-2 w-full px-3 py-1.5 text-sm hover:bg-white/[0.06] text-red-400 text-left transition-all duration-200"
+                    className="flex items-center gap-2 w-full px-3 py-1.5 text-sm hover:bg-white/[0.06] text-red-400/80 text-left transition-all duration-200"
                   >
                     <Trash2 size={14} />
                     Delete
