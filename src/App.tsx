@@ -7,6 +7,7 @@ import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
 import PageView from './pages/PageView'
 import TasksPage from './pages/TasksPage'
+import DashboardPage from './pages/DashboardPage'
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user, initialized } = useAuthStore()
@@ -45,6 +46,7 @@ export default function App() {
               <Routes>
                 <Route path="page/:id" element={<PageView />} />
                 <Route path="tasks" element={<TasksPage />} />
+                <Route path="dashboard" element={<DashboardPage />} />
                 <Route path="" element={<AutoNavigate />} />
                 <Route path="*" element={<AutoNavigate />} />
               </Routes>

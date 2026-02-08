@@ -60,7 +60,7 @@ export const api = {
     get(id: string) {
       return request<Page>(`/pages/${id}`)
     },
-    create(data: { title?: string; parentId?: string; pageType?: string }) {
+    create(data: { title?: string; parentId?: string; pageType?: string; content?: Record<string, unknown> }) {
       return request<Page>('/pages', {
         method: 'POST',
         body: JSON.stringify(data),
@@ -74,6 +74,15 @@ export const api = {
     },
     delete(id: string) {
       return request<{ ok: boolean }>(`/pages/${id}`, { method: 'DELETE' })
+    },
+    search(q: string) {
+      return request<PageMeta[]>(`/pages/search?q=${encodeURIComponent(q)}`)
+    },
+    daily() {
+      return request<Page>('/pages/daily', { method: 'POST' })
+    },
+    backlinks(id: string) {
+      return request<PageMeta[]>(`/pages/${id}/backlinks`)
     },
   },
 
@@ -99,6 +108,17 @@ export const api = {
     },
     delete(id: string) {
       return request<{ ok: boolean }>(`/tasks/${id}`, { method: 'DELETE' })
+    },
+    stats() {
+      return request<{
+        total: number
+        overdue: number
+        dueToday: number
+        dueThisWeek: number
+        completedToday: number
+        byStatus: Record<string, number>
+        byPriority: Record<string, number>
+      }>('/tasks/stats')
     },
   },
 }

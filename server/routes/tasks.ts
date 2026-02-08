@@ -1,5 +1,5 @@
 import { Hono } from 'hono'
-import { eq, and, desc, asc, lte, gte, inArray, isNull, isNotNull } from 'drizzle-orm'
+import { eq, and, desc, asc, lte, gte, inArray, isNull, isNotNull, sql } from 'drizzle-orm'
 import { ulid } from 'ulid'
 import { db, schema } from '../db/index.js'
 import { requireAuth } from '../middleware/auth.js'
@@ -8,6 +8,61 @@ import type { AppEnv } from '../types.js'
 const tasks = new Hono<AppEnv>()
 
 tasks.use('*', requireAuth)
+
+// Task stats for dashboard
+tasks.get('/stats', async (c) => {
+  const workspaceId = c.get('workspaceId')
+  const now = new Date()
+  const todayStart = new Date(now)
+  todayStart.setHours(0, 0, 0, 0)
+  const todayEnd = new Date(now)
+  todayEnd.setHours(23, 59, 59, 999)
+  const weekEnd = new Date(now)
+  weekEnd.setDate(weekEnd.getDate() + 7)
+
+  const allTasks = await db
+    .select()
+    .from(schema.tasks)
+    .where(eq(schema.tasks.workspaceId, workspaceId))
+
+  const overdue = allTasks.filter(
+    (t) => t.dueDate && new Date(t.dueDate) < now && t.status !== 'done' && t.status !== 'cancelled'
+  ).length
+  const dueToday = allTasks.filter(
+    (t) =>
+      t.dueDate &&
+      new Date(t.dueDate) >= todayStart &&
+      new Date(t.dueDate) <= todayEnd &&
+      t.status !== 'done' && t.status !== 'cancelled'
+  ).length
+  const dueThisWeek = allTasks.filter(
+    (t) =>
+      t.dueDate &&
+      new Date(t.dueDate) >= now &&
+      new Date(t.dueDate) <= weekEnd &&
+      t.status !== 'done' && t.status !== 'cancelled'
+  ).length
+  const completedToday = allTasks.filter(
+    (t) => t.completedAt && new Date(t.completedAt) >= todayStart
+  ).length
+
+  const byStatus: Record<string, number> = {}
+  const byPriority: Record<string, number> = {}
+  for (const t of allTasks) {
+    byStatus[t.status] = (byStatus[t.status] || 0) + 1
+    byPriority[t.priority] = (byPriority[t.priority] || 0) + 1
+  }
+
+  return c.json({
+    total: allTasks.length,
+    overdue,
+    dueToday,
+    dueThisWeek,
+    completedToday,
+    byStatus,
+    byPriority,
+  })
+})
 
 // List tasks with filters
 tasks.get('/', async (c) => {
@@ -48,6 +103,15 @@ tasks.get('/', async (c) => {
     conditions.push(gte(schema.tasks.dueDate, new Date()))
   } else if (due === 'none') {
     conditions.push(isNull(schema.tasks.dueDate))
+  }
+
+  const dueAfter = c.req.query('dueAfter')
+  const dueBefore = c.req.query('dueBefore')
+  if (dueAfter) {
+    conditions.push(gte(schema.tasks.dueDate, new Date(dueAfter)))
+  }
+  if (dueBefore) {
+    conditions.push(lte(schema.tasks.dueDate, new Date(dueBefore)))
   }
 
   const sortColumn =

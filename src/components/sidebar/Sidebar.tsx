@@ -1,8 +1,12 @@
+import { useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { Plus, FileText, Star, LogOut, CheckSquare, Inbox } from 'lucide-react'
+import { Plus, FileText, Star, LogOut, CheckSquare, LayoutDashboard, CalendarDays } from 'lucide-react'
 import { usePagesStore } from '../../stores/pages'
 import { useAuthStore } from '../../stores/auth'
+import { api } from '../../lib/api'
 import PageTreeItem from './PageTreeItem'
+import TemplatePicker from '../TemplatePicker'
+import type { PageTemplate } from '../../lib/templates'
 
 interface SidebarProps {
   onClose: () => void
@@ -11,13 +15,22 @@ interface SidebarProps {
 export default function Sidebar({ onClose }: SidebarProps) {
   const navigate = useNavigate()
   const location = useLocation()
-  const { pages, createPage, getPageTree } = usePagesStore()
+  const { pages, createPage, fetchPages, getPageTree } = usePagesStore()
   const { user, logout } = useAuthStore()
+  const [showTemplatePicker, setShowTemplatePicker] = useState(false)
   const tree = getPageTree()
   const favorites = pages.filter((p) => p.isFavorite)
 
-  const handleCreatePage = async () => {
-    const page = await createPage({ title: 'Untitled' })
+  const handleCreatePage = () => {
+    setShowTemplatePicker(true)
+  }
+
+  const handleTemplateSelect = async (template: PageTemplate) => {
+    setShowTemplatePicker(false)
+    const page = await createPage({
+      title: template.id === 'blank' ? 'Untitled' : template.name,
+      ...(template.id !== 'blank' ? { content: template.content } : {}),
+    } as any)
     navigate(`/page/${page.id}`)
   }
 
@@ -31,6 +44,7 @@ export default function Sidebar({ onClose }: SidebarProps) {
     : null
 
   return (
+    <>
     <aside className="w-sidebar h-screen flex flex-col bg-sidebar border-r border-gray-200 shrink-0">
       {/* Workspace header */}
       <div className="h-11 flex items-center justify-between px-3 border-b border-gray-200">
@@ -42,6 +56,15 @@ export default function Sidebar({ onClose }: SidebarProps) {
         {/* Global views */}
         <div className="mb-3 px-1">
           <button
+            onClick={() => navigate('/dashboard')}
+            className={`flex items-center gap-2 w-full px-2 py-1.5 text-sm rounded hover:bg-gray-200/70 ${
+              location.pathname === '/dashboard' ? 'bg-gray-200 font-medium' : 'text-gray-600'
+            }`}
+          >
+            <LayoutDashboard size={16} className="text-gray-400" />
+            Dashboard
+          </button>
+          <button
             onClick={() => navigate('/tasks')}
             className={`flex items-center gap-2 w-full px-2 py-1.5 text-sm rounded hover:bg-gray-200/70 ${
               location.pathname === '/tasks' ? 'bg-gray-200 font-medium' : 'text-gray-600'
@@ -49,6 +72,19 @@ export default function Sidebar({ onClose }: SidebarProps) {
           >
             <CheckSquare size={16} className="text-gray-400" />
             Tasks
+          </button>
+          <button
+            onClick={async () => {
+              try {
+                const page = await api.pages.daily()
+                await fetchPages()
+                navigate(`/page/${page.id}`)
+              } catch {}
+            }}
+            className="flex items-center gap-2 w-full px-2 py-1.5 text-sm rounded hover:bg-gray-200/70 text-gray-600"
+          >
+            <CalendarDays size={16} className="text-gray-400" />
+            Daily Notes
           </button>
         </div>
 
@@ -117,5 +153,13 @@ export default function Sidebar({ onClose }: SidebarProps) {
         </button>
       </div>
     </aside>
+
+    {showTemplatePicker && (
+      <TemplatePicker
+        onSelect={handleTemplateSelect}
+        onClose={() => setShowTemplatePicker(false)}
+      />
+    )}
+    </>
   )
 }

@@ -9,7 +9,7 @@ interface PagesState {
 
   fetchPages: () => Promise<void>
   fetchPage: (id: string) => Promise<void>
-  createPage: (data?: { title?: string; parentId?: string }) => Promise<Page>
+  createPage: (data?: { title?: string; parentId?: string; content?: Record<string, unknown> }) => Promise<Page>
   updatePage: (id: string, data: Partial<Page>) => Promise<void>
   deletePage: (id: string) => Promise<void>
   getPageTree: () => PageTreeNode[]

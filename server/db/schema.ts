@@ -81,3 +81,14 @@ export const tasks = pgTable('tasks', {
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
 })
+
+export const links = pgTable('links', {
+  id: text('id').primaryKey(),
+  sourcePageId: text('source_page_id')
+    .references(() => pages.id, { onDelete: 'cascade' })
+    .notNull(),
+  targetPageId: text('target_page_id')
+    .references(() => pages.id, { onDelete: 'cascade' })
+    .notNull(),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+})

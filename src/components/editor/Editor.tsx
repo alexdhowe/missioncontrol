@@ -1,4 +1,4 @@
-import { useEffect, useCallback, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import TaskList from '@tiptap/extension-task-list'
@@ -14,10 +14,16 @@ import { SlashCommandMenu, getSuggestionItems } from './SlashCommandMenu'
 interface EditorProps {
   content: Record<string, unknown> | null
   onUpdate: (content: Record<string, unknown>) => void
+  onEditorReady?: (editor: any) => void
   editable?: boolean
 }
 
-export default function Editor({ content, onUpdate, editable = true }: EditorProps) {
+export default function Editor({
+  content,
+  onUpdate,
+  onEditorReady,
+  editable = true,
+}: EditorProps) {
   const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const editor = useEditor({
@@ -34,8 +40,8 @@ export default function Editor({ content, onUpdate, editable = true }: EditorPro
       Highlight.configure({ multicolor: true }),
       Underline,
       Link.configure({
-        openOnClick: false,
-        HTMLAttributes: { class: 'text-accent underline' },
+        openOnClick: true,
+        HTMLAttributes: { class: 'text-accent underline cursor-pointer' },
       }),
       SlashCommand.configure({
         suggestion: {
@@ -98,15 +104,35 @@ export default function Editor({ content, onUpdate, editable = true }: EditorPro
       attributes: {
         class: 'tiptap prose prose-sm max-w-none focus:outline-none',
       },
+      handleClick: (view, pos, event) => {
+        // Handle internal link clicks
+        const link = (event.target as HTMLElement).closest('a')
+        if (link) {
+          const href = link.getAttribute('href')
+          if (href?.startsWith('/page/')) {
+            event.preventDefault()
+            window.history.pushState({}, '', href)
+            window.dispatchEvent(new PopStateEvent('popstate'))
+            return true
+          }
+        }
+        return false
+      },
     },
     onUpdate: ({ editor }) => {
-      // Debounced save
       if (saveTimerRef.current) clearTimeout(saveTimerRef.current)
       saveTimerRef.current = setTimeout(() => {
         onUpdate(editor.getJSON() as Record<string, unknown>)
       }, 500)
     },
   })
+
+  // Expose editor instance
+  useEffect(() => {
+    if (editor && onEditorReady) {
+      onEditorReady(editor)
+    }
+  }, [editor, onEditorReady])
 
   // Update content when it changes externally (page navigation)
   useEffect(() => {

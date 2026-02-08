@@ -57,6 +57,15 @@ export async function migrate() {
         archived_at TIMESTAMPTZ
       );
 
+      CREATE TABLE IF NOT EXISTS links (
+        id TEXT PRIMARY KEY,
+        source_page_id TEXT NOT NULL REFERENCES pages(id) ON DELETE CASCADE,
+        target_page_id TEXT NOT NULL REFERENCES pages(id) ON DELETE CASCADE,
+        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+      );
+      CREATE INDEX IF NOT EXISTS idx_links_target ON links(target_page_id);
+      CREATE INDEX IF NOT EXISTS idx_links_source ON links(source_page_id);
+
       CREATE TABLE IF NOT EXISTS tasks (
         id TEXT PRIMARY KEY,
         title TEXT NOT NULL DEFAULT '',

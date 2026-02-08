@@ -1,0 +1,212 @@
+import { useEffect, useState } from 'react'
+import {
+  AlertTriangle,
+  CalendarClock,
+  CalendarDays,
+  CheckCircle2,
+  ListTodo,
+  Loader2,
+} from 'lucide-react'
+import { TASK_STATUS_LABELS } from '../types'
+import type { Task, TaskStatus } from '../types'
+
+interface TaskStats {
+  total: number
+  overdue: number
+  dueToday: number
+  dueThisWeek: number
+  completedToday: number
+  byStatus: Record<string, number>
+  byPriority: Record<string, number>
+}
+
+const STATUS_BAR_COLORS: Record<string, string> = {
+  not_started: 'bg-gray-300',
+  in_progress: 'bg-blue-500',
+  waiting: 'bg-yellow-500',
+  done: 'bg-green-500',
+  cancelled: 'bg-gray-400',
+}
+
+export default function DashboardPage() {
+  const [stats, setStats] = useState<TaskStats | null>(null)
+  const [recentTasks, setRecentTasks] = useState<Task[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    async function load() {
+      try {
+        const [statsData, tasksData] = await Promise.all([
+          fetch('/api/tasks/stats', { credentials: 'include' }).then((r) =>
+            r.json()
+          ),
+          fetch('/api/tasks?limit=5', { credentials: 'include' }).then((r) =>
+            r.json()
+          ),
+        ])
+        setStats(statsData)
+        setRecentTasks(Array.isArray(tasksData) ? tasksData.slice(0, 5) : [])
+      } catch {
+        // silently handle errors
+      } finally {
+        setLoading(false)
+      }
+    }
+    load()
+  }, [])
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-full">
+        <Loader2 size={24} className="animate-spin text-gray-400" />
+      </div>
+    )
+  }
+
+  if (!stats) {
+    return (
+      <div className="flex items-center justify-center h-full text-gray-400">
+        <p>Failed to load dashboard data</p>
+      </div>
+    )
+  }
+
+  const maxStatusCount = Math.max(...Object.values(stats.byStatus), 1)
+
+  const cards = [
+    {
+      label: 'Overdue',
+      value: stats.overdue,
+      icon: AlertTriangle,
+      color: 'text-red-500',
+      bg: 'bg-red-50',
+    },
+    {
+      label: 'Due Today',
+      value: stats.dueToday,
+      icon: CalendarClock,
+      color: 'text-orange-500',
+      bg: 'bg-orange-50',
+    },
+    {
+      label: 'Due This Week',
+      value: stats.dueThisWeek,
+      icon: CalendarDays,
+      color: 'text-blue-500',
+      bg: 'bg-blue-50',
+    },
+    {
+      label: 'Completed Today',
+      value: stats.completedToday,
+      icon: CheckCircle2,
+      color: 'text-green-500',
+      bg: 'bg-green-50',
+    },
+  ]
+
+  return (
+    <div className="max-w-5xl mx-auto px-6 py-8">
+      {/* Header */}
+      <div className="mb-8">
+        <h1 className="text-2xl font-bold">Dashboard</h1>
+        <p className="text-gray-500 text-sm mt-1">
+          Overview of your tasks and progress
+        </p>
+      </div>
+
+      {/* Stat Cards */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        {cards.map((card) => (
+          <div
+            key={card.label}
+            className="border border-gray-200 rounded-lg p-4"
+          >
+            <div className="flex items-center gap-2 mb-2">
+              <div className={`p-1.5 rounded-md ${card.bg}`}>
+                <card.icon size={16} className={card.color} />
+              </div>
+              <span className="text-sm text-gray-500">{card.label}</span>
+            </div>
+            <p className="text-2xl font-semibold">{card.value}</p>
+          </div>
+        ))}
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Tasks by Status - Bar Chart */}
+        <div className="border border-gray-200 rounded-lg p-5">
+          <h2 className="text-sm font-semibold text-gray-700 mb-4 flex items-center gap-2">
+            <ListTodo size={16} className="text-[#2563EB]" />
+            Tasks by Status
+          </h2>
+          <div className="space-y-3">
+            {Object.entries(stats.byStatus).map(([status, count]) => (
+              <div key={status}>
+                <div className="flex items-center justify-between text-xs mb-1">
+                  <span className="text-gray-600">
+                    {TASK_STATUS_LABELS[status as TaskStatus] || status}
+                  </span>
+                  <span className="text-gray-400 font-medium">{count}</span>
+                </div>
+                <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
+                  <div
+                    className={`h-full rounded-full transition-all ${STATUS_BAR_COLORS[status] || 'bg-gray-300'}`}
+                    style={{
+                      width: `${(count / maxStatusCount) * 100}%`,
+                    }}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+          <p className="text-xs text-gray-400 mt-3">
+            Total: {stats.total} tasks
+          </p>
+        </div>
+
+        {/* Recent Tasks */}
+        <div className="border border-gray-200 rounded-lg p-5">
+          <h2 className="text-sm font-semibold text-gray-700 mb-4 flex items-center gap-2">
+            <CalendarClock size={16} className="text-[#2563EB]" />
+            Recent Tasks
+          </h2>
+          {recentTasks.length === 0 ? (
+            <p className="text-sm text-gray-400 text-center py-6">
+              No tasks yet
+            </p>
+          ) : (
+            <div className="space-y-1">
+              {recentTasks.map((task) => {
+                const isDone =
+                  task.status === 'done' || task.status === 'cancelled'
+                return (
+                  <div
+                    key={task.id}
+                    className="flex items-center gap-2 px-2 py-2 rounded-md hover:bg-gray-50 transition-colors"
+                  >
+                    <div
+                      className={`w-2 h-2 rounded-full shrink-0 ${STATUS_BAR_COLORS[task.status] || 'bg-gray-300'}`}
+                    />
+                    <span
+                      className={`text-sm truncate flex-1 ${isDone ? 'line-through text-gray-400' : ''}`}
+                    >
+                      {task.title || 'Untitled task'}
+                    </span>
+                    {task.dueDate && (
+                      <span className="text-xs text-gray-400 shrink-0">
+                        {new Date(task.dueDate).toLocaleDateString('en-US', {
+                          month: 'short',
+                          day: 'numeric',
+                        })}
+                      </span>
+                    )}
+                  </div>
+                )
+              })}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}

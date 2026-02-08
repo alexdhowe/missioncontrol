@@ -1,13 +1,12 @@
-import { useEffect, useState } from 'react'
-import { Plus, LayoutList, Kanban } from 'lucide-react'
+import { useEffect, useState, lazy, Suspense } from 'react'
+import { Plus, LayoutList, Kanban, CalendarDays } from 'lucide-react'
 import { useTasksStore } from '../stores/tasks'
 import TaskList from '../components/tasks/TaskList'
 import TaskBoard from '../components/tasks/TaskBoard'
 import TaskPanel from '../components/tasks/TaskPanel'
-import type { TaskStatus, TaskPriority } from '../types'
-import { TASK_STATUS_LABELS, TASK_PRIORITY_LABELS } from '../types'
+import TaskCalendar from '../components/tasks/TaskCalendar'
 
-type ViewMode = 'list' | 'board'
+type ViewMode = 'list' | 'board' | 'calendar'
 
 export default function TasksPage() {
   const [view, setView] = useState<ViewMode>('list')
@@ -40,15 +39,13 @@ export default function TasksPage() {
           {/* Header */}
           <div className="flex items-center justify-between mb-6">
             <h1 className="text-2xl font-bold">Tasks</h1>
-            <div className="flex items-center gap-2">
-              <button
-                onClick={handleNewTask}
-                className="flex items-center gap-1.5 px-3 py-1.5 bg-accent text-white rounded-lg text-sm font-medium hover:bg-accent-hover transition-colors"
-              >
-                <Plus size={16} />
-                New Task
-              </button>
-            </div>
+            <button
+              onClick={handleNewTask}
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-accent text-white rounded-lg text-sm font-medium hover:bg-accent-hover transition-colors"
+            >
+              <Plus size={16} />
+              New Task
+            </button>
           </div>
 
           {/* Filters + View Toggle */}
@@ -82,29 +79,29 @@ export default function TasksPage() {
             <div className="flex-1" />
 
             <div className="flex items-center bg-gray-100 rounded-lg p-0.5">
-              <button
-                onClick={() => setView('list')}
-                className={`flex items-center gap-1 px-2.5 py-1 rounded-md text-sm transition-colors ${
-                  view === 'list' ? 'bg-white shadow-sm font-medium' : 'text-gray-500'
-                }`}
-              >
-                <LayoutList size={14} />
-                List
-              </button>
-              <button
-                onClick={() => setView('board')}
-                className={`flex items-center gap-1 px-2.5 py-1 rounded-md text-sm transition-colors ${
-                  view === 'board' ? 'bg-white shadow-sm font-medium' : 'text-gray-500'
-                }`}
-              >
-                <Kanban size={14} />
-                Board
-              </button>
+              {([
+                { key: 'list' as const, icon: LayoutList, label: 'List' },
+                { key: 'board' as const, icon: Kanban, label: 'Board' },
+                { key: 'calendar' as const, icon: CalendarDays, label: 'Calendar' },
+              ] as const).map(({ key, icon: Icon, label }) => (
+                <button
+                  key={key}
+                  onClick={() => setView(key)}
+                  className={`flex items-center gap-1 px-2.5 py-1 rounded-md text-sm transition-colors ${
+                    view === key ? 'bg-white shadow-sm font-medium' : 'text-gray-500'
+                  }`}
+                >
+                  <Icon size={14} />
+                  {label}
+                </button>
+              ))}
             </div>
           </div>
 
           {/* View */}
-          {view === 'list' ? <TaskList /> : <TaskBoard />}
+          {view === 'list' && <TaskList />}
+          {view === 'board' && <TaskBoard />}
+          {view === 'calendar' && <TaskCalendar />}
         </div>
       </div>
 
