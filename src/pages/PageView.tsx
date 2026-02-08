@@ -86,14 +86,14 @@ export default function PageView() {
 
   if (loading || !currentPage) {
     return (
-      <div className="flex items-center justify-center h-full">
+      <div className="flex items-center justify-center h-full bg-surface">
         <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-accent" />
       </div>
     )
   }
 
   return (
-    <div className="max-w-content mx-auto px-6 py-8">
+    <div className="max-w-content mx-auto px-6 py-8 bg-surface animate-fade-in">
       <textarea
         ref={titleRef}
         value={title}

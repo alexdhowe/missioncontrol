@@ -18,10 +18,10 @@ export default function TopBar({ sidebarOpen, onToggleSidebar }: TopBarProps) {
   const currentPage = usePagesStore((s) => s.currentPage)
 
   return (
-    <header className="h-11 flex items-center gap-1 px-2 border-b border-gray-100 bg-white shrink-0">
+    <header className="h-11 flex items-center gap-1 px-2 border-b border-white/[0.06] bg-surface/80 backdrop-blur-xl shrink-0">
       <button
         onClick={onToggleSidebar}
-        className="p-1.5 rounded hover:bg-gray-100 text-gray-500"
+        className="p-1.5 rounded hover:bg-white/[0.06] text-gray-400 transition-all duration-200"
         title={sidebarOpen ? 'Close sidebar' : 'Open sidebar'}
       >
         {sidebarOpen ? (
@@ -33,19 +33,19 @@ export default function TopBar({ sidebarOpen, onToggleSidebar }: TopBarProps) {
 
       <button
         onClick={() => navigate(-1)}
-        className="p-1.5 rounded hover:bg-gray-100 text-gray-400"
+        className="p-1.5 rounded hover:bg-white/[0.06] text-gray-500 transition-all duration-200"
       >
         <ChevronLeft size={16} />
       </button>
       <button
         onClick={() => navigate(1)}
-        className="p-1.5 rounded hover:bg-gray-100 text-gray-400"
+        className="p-1.5 rounded hover:bg-white/[0.06] text-gray-500 transition-all duration-200"
       >
         <ChevronRight size={16} />
       </button>
 
       {currentPage && (
-        <div className="flex items-center gap-1 text-sm text-gray-500 ml-1">
+        <div className="flex items-center gap-1 text-sm text-gray-400 ml-1">
           <span>{currentPage.icon || '📄'}</span>
           <span className="truncate max-w-xs">{currentPage.title}</span>
         </div>
@@ -59,11 +59,11 @@ export default function TopBar({ sidebarOpen, onToggleSidebar }: TopBarProps) {
             new KeyboardEvent('keydown', { key: 'k', metaKey: true })
           )
         }}
-        className="flex items-center gap-2 px-2.5 py-1 rounded-md text-sm text-gray-400 hover:bg-gray-100"
+        className="flex items-center gap-2 px-2.5 py-1 rounded-md text-sm text-gray-400 bg-white/[0.03] border border-white/[0.06] hover:bg-white/[0.06] transition-all duration-200"
       >
         <Search size={14} />
         <span className="hidden sm:inline">Search</span>
-        <kbd className="hidden sm:inline text-xs bg-gray-100 px-1.5 py-0.5 rounded">
+        <kbd className="hidden sm:inline text-xs bg-white/[0.06] text-gray-500 px-1.5 py-0.5 rounded">
           ⌘K
         </kbd>
       </button>

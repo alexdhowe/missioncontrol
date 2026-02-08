@@ -33,15 +33,15 @@ export default function TasksPage() {
   }
 
   return (
-    <div className="flex h-full">
-      <div className="flex-1 overflow-y-auto">
+    <div className="flex h-full animate-fade-in">
+      <div className="flex-1 overflow-y-auto bg-surface">
         <div className="max-w-5xl mx-auto px-6 py-8">
           {/* Header */}
           <div className="flex items-center justify-between mb-6">
-            <h1 className="text-2xl font-bold">Tasks</h1>
+            <h1 className="text-2xl font-bold text-white">Tasks</h1>
             <button
               onClick={handleNewTask}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-accent text-white rounded-lg text-sm font-medium hover:bg-accent-hover transition-colors"
+              className="btn-gradient flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200"
             >
               <Plus size={16} />
               New Task
@@ -53,7 +53,7 @@ export default function TasksPage() {
             <select
               value={statusFilter}
               onChange={(e) => handleFilterChange(e.target.value, priorityFilter)}
-              className="px-2.5 py-1.5 text-sm border border-gray-200 rounded-lg bg-white"
+              className="select-dark"
             >
               <option value="all">All Status</option>
               <option value="not_started">Not Started</option>
@@ -66,7 +66,7 @@ export default function TasksPage() {
             <select
               value={priorityFilter}
               onChange={(e) => handleFilterChange(statusFilter, e.target.value)}
-              className="px-2.5 py-1.5 text-sm border border-gray-200 rounded-lg bg-white"
+              className="select-dark"
             >
               <option value="all">All Priority</option>
               <option value="urgent">Urgent</option>
@@ -78,7 +78,7 @@ export default function TasksPage() {
 
             <div className="flex-1" />
 
-            <div className="flex items-center bg-gray-100 rounded-lg p-0.5">
+            <div className="flex items-center bg-white/[0.04] rounded-lg p-0.5">
               {([
                 { key: 'list' as const, icon: LayoutList, label: 'List' },
                 { key: 'board' as const, icon: Kanban, label: 'Board' },
@@ -87,8 +87,8 @@ export default function TasksPage() {
                 <button
                   key={key}
                   onClick={() => setView(key)}
-                  className={`flex items-center gap-1 px-2.5 py-1 rounded-md text-sm transition-colors ${
-                    view === key ? 'bg-white shadow-sm font-medium' : 'text-gray-500'
+                  className={`flex items-center gap-1 px-2.5 py-1 rounded-md text-sm transition-all duration-200 ${
+                    view === key ? 'bg-white/[0.1] text-white shadow font-medium' : 'text-gray-500 hover:text-gray-300'
                   }`}
                 >
                   <Icon size={14} />

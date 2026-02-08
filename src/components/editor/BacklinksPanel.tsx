@@ -38,8 +38,8 @@ export default function BacklinksPanel({ pageId }: BacklinksPanelProps) {
 
   if (loading) {
     return (
-      <div className="border-t border-gray-200 px-4 py-3">
-        <div className="flex items-center gap-2 text-sm text-gray-400">
+      <div className="border-t border-white/[0.06] px-4 py-3">
+        <div className="flex items-center gap-2 text-sm text-gray-500">
           <Loader2 size={14} className="animate-spin" />
           <span>Loading backlinks...</span>
         </div>
@@ -52,21 +52,21 @@ export default function BacklinksPanel({ pageId }: BacklinksPanelProps) {
   }
 
   return (
-    <div className="border-t border-gray-200">
+    <div className="border-t border-white/[0.06]">
       {/* Toggle Header */}
       <button
         onClick={() => setExpanded(!expanded)}
-        className="flex items-center gap-2 w-full px-4 py-2.5 text-left hover:bg-gray-50 transition-colors"
+        className="flex items-center gap-2 w-full px-4 py-2.5 text-left hover:bg-white/[0.06] transition-all duration-200"
       >
         <ChevronRight
           size={14}
-          className={`text-gray-400 transition-transform ${
+          className={`text-gray-500 transition-transform duration-200 ${
             expanded ? 'rotate-90' : ''
           }`}
         />
-        <Link2 size={14} className="text-gray-400" />
-        <span className="text-xs font-medium text-gray-500">Backlinks</span>
-        <span className="text-xs bg-gray-100 text-gray-500 px-1.5 py-0.5 rounded-full ml-auto">
+        <Link2 size={14} className="text-gray-500" />
+        <span className="text-xs font-medium text-gray-400">Backlinks</span>
+        <span className="text-xs bg-white/[0.06] text-gray-500 px-1.5 py-0.5 rounded-full ml-auto">
           {backlinks.length}
         </span>
       </button>
@@ -79,17 +79,17 @@ export default function BacklinksPanel({ pageId }: BacklinksPanelProps) {
               <button
                 key={link.id}
                 onClick={() => navigate(`/page/${link.id}`)}
-                className="flex items-center gap-2 w-full px-2 py-1.5 rounded-md text-left text-sm hover:bg-gray-50 transition-colors group"
+                className="flex items-center gap-2 w-full px-2 py-1.5 rounded-md text-left text-sm hover:bg-white/[0.06] transition-all duration-200 group"
               >
                 <span className="shrink-0">
                   {link.icon || (
                     <FileText
                       size={14}
-                      className="text-gray-400 group-hover:text-gray-500"
+                      className="text-gray-500 group-hover:text-gray-400"
                     />
                   )}
                 </span>
-                <span className="truncate text-gray-600 group-hover:text-gray-900">
+                <span className="truncate text-gray-400 group-hover:text-white">
                   {link.title || 'Untitled'}
                 </span>
               </button>

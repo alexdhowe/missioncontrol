@@ -39,10 +39,10 @@ export default function QuickTaskCreator({ onClose }: QuickTaskCreatorProps) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-center pt-[20vh]">
-      <div className="fixed inset-0 bg-black/50" onClick={onClose} />
-      <div className="relative bg-white rounded-xl shadow-2xl w-full max-w-lg overflow-hidden">
+      <div className="fixed inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
+      <div className="relative bg-surface-overlay border border-white/[0.08] rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden animate-scale-in">
         <form onSubmit={handleSubmit}>
-          <div className="px-4 py-3 border-b border-gray-100">
+          <div className="px-4 py-3 border-b border-white/[0.06]">
             <div className="flex items-center gap-3">
               <Plus size={18} className="text-accent shrink-0" />
               <input
@@ -52,7 +52,7 @@ export default function QuickTaskCreator({ onClose }: QuickTaskCreatorProps) {
                 onChange={(e) => setTitle(e.target.value)}
                 onKeyDown={handleKeyDown}
                 placeholder="What needs to be done?"
-                className="flex-1 outline-none text-sm"
+                className="flex-1 outline-none text-sm bg-transparent text-white placeholder-gray-600"
               />
             </div>
           </div>
@@ -61,7 +61,7 @@ export default function QuickTaskCreator({ onClose }: QuickTaskCreatorProps) {
             <select
               value={priority}
               onChange={(e) => setPriority(e.target.value as TaskPriority)}
-              className="text-xs px-2 py-1 border border-gray-200 rounded-md bg-white"
+              className="select-dark"
             >
               <option value="none">No priority</option>
               <option value="low">Low</option>
@@ -74,7 +74,7 @@ export default function QuickTaskCreator({ onClose }: QuickTaskCreatorProps) {
               type="date"
               value={dueDate}
               onChange={(e) => setDueDate(e.target.value)}
-              className="text-xs px-2 py-1 border border-gray-200 rounded-md bg-white"
+              className="input-dark"
             />
 
             <div className="flex-1" />
@@ -82,7 +82,7 @@ export default function QuickTaskCreator({ onClose }: QuickTaskCreatorProps) {
             <button
               type="submit"
               disabled={!title.trim()}
-              className="px-3 py-1 bg-accent text-white rounded-md text-xs font-medium hover:bg-accent-hover disabled:opacity-50 transition-colors"
+              className="btn-gradient px-3 py-1 rounded-md text-xs font-medium disabled:opacity-50 transition-all duration-200"
             >
               Create
             </button>

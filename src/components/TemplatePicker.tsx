@@ -21,16 +21,16 @@ export default function TemplatePicker({ onSelect, onClose }: TemplatePickerProp
 
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-center pt-[15vh]">
-      <div className="fixed inset-0 bg-black/50" onClick={onClose} />
-      <div className="relative bg-white rounded-xl shadow-2xl w-full max-w-lg overflow-hidden">
+      <div className="fixed inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
+      <div className="relative bg-surface-overlay border border-white/[0.08] rounded-2xl shadow-glow-lg w-full max-w-lg overflow-hidden animate-scale-in">
         {/* Header */}
-        <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100">
-          <h2 className="text-sm font-semibold">Choose a template</h2>
+        <div className="flex items-center justify-between px-4 py-3 border-b border-white/[0.06]">
+          <h2 className="text-sm font-semibold text-white">Choose a template</h2>
           <button
             onClick={onClose}
-            className="p-1 rounded-md hover:bg-gray-100 transition-colors"
+            className="p-1 rounded-md hover:bg-white/[0.06] transition-all duration-200"
           >
-            <X size={16} className="text-gray-400" />
+            <X size={16} className="text-gray-500" />
           </button>
         </div>
 
@@ -40,13 +40,13 @@ export default function TemplatePicker({ onSelect, onClose }: TemplatePickerProp
             <button
               key={template.id}
               onClick={() => onSelect(template)}
-              className="flex flex-col items-start gap-1 p-3 rounded-lg border border-gray-200 text-left hover:border-[#2563EB] hover:bg-blue-50/30 transition-colors group"
+              className="flex flex-col items-start gap-1 p-3 rounded-lg bg-white/[0.03] border border-white/[0.06] text-left hover:border-accent/50 hover:bg-accent/5 transition-all duration-200 group"
             >
               <span className="text-2xl">{template.icon}</span>
-              <span className="text-sm font-medium text-gray-800 group-hover:text-[#2563EB]">
+              <span className="text-sm font-medium text-gray-200 group-hover:text-accent">
                 {template.name}
               </span>
-              <span className="text-xs text-gray-400 leading-snug">
+              <span className="text-xs text-gray-500 leading-snug">
                 {template.description}
               </span>
             </button>

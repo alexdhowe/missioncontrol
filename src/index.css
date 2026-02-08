@@ -1,13 +1,24 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
-  body {
-    @apply bg-white text-[#1A1A1A];
+  * {
+    @apply border-glass-border;
   }
 
-  /* Scrollbar styling */
+  html {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply bg-surface-deep text-gray-200;
+  }
+
   ::-webkit-scrollbar {
     @apply w-1.5;
   }
@@ -15,16 +26,54 @@
     @apply bg-transparent;
   }
   ::-webkit-scrollbar-thumb {
-    @apply bg-gray-300 rounded-full;
+    @apply bg-white/10 rounded-full;
   }
   ::-webkit-scrollbar-thumb:hover {
-    @apply bg-gray-400;
+    @apply bg-white/20;
+  }
+
+  ::selection {
+    background: rgba(99, 102, 241, 0.3);
+    color: white;
   }
 }
 
-/* TipTap editor styles */
+@layer components {
+  .glass-panel {
+    @apply bg-white/[0.03] backdrop-blur-xl border border-white/[0.06] rounded-xl;
+  }
+
+  .glass-panel-raised {
+    @apply bg-white/[0.05] backdrop-blur-xl border border-white/[0.08] rounded-xl shadow-glow;
+  }
+
+  .btn-gradient {
+    @apply bg-gradient-to-r from-indigo-500 to-purple-500 text-white font-medium rounded-lg
+      transition-all duration-200 hover:from-indigo-400 hover:to-purple-400
+      hover:shadow-glow-accent active:scale-[0.98];
+  }
+
+  .btn-ghost {
+    @apply text-gray-400 rounded-lg transition-all duration-200
+      hover:bg-white/[0.06] hover:text-gray-200;
+  }
+
+  .input-dark {
+    @apply bg-white/[0.05] border border-white/[0.08] rounded-lg text-white
+      placeholder-gray-500 outline-none transition-all duration-200
+      focus:border-accent/50 focus:ring-2 focus:ring-accent/20 focus:bg-white/[0.07];
+  }
+
+  .select-dark {
+    @apply bg-white/[0.05] border border-white/[0.08] rounded-lg text-gray-300
+      outline-none transition-all duration-200 cursor-pointer
+      focus:border-accent/50 focus:ring-2 focus:ring-accent/20;
+  }
+}
+
+/* TipTap */
 .tiptap {
-  @apply outline-none min-h-[200px];
+  @apply outline-none min-h-[200px] text-gray-200;
 }
 
 .tiptap > * + * {
@@ -32,92 +81,90 @@
 }
 
 .tiptap p.is-editor-empty:first-child::before {
-  @apply text-gray-400 float-left h-0 pointer-events-none;
+  @apply text-gray-600 float-left h-0 pointer-events-none;
   content: attr(data-placeholder);
 }
 
-.tiptap h1 {
-  @apply text-3xl font-bold mt-8 mb-2;
-}
+.tiptap h1 { @apply text-3xl font-bold mt-8 mb-2 text-white; }
+.tiptap h2 { @apply text-2xl font-semibold mt-6 mb-2 text-white; }
+.tiptap h3 { @apply text-xl font-semibold mt-4 mb-1 text-white; }
 
-.tiptap h2 {
-  @apply text-2xl font-semibold mt-6 mb-2;
-}
+.tiptap ul { @apply list-disc pl-6; }
+.tiptap ol { @apply list-decimal pl-6; }
+.tiptap li { @apply my-0.5; }
 
-.tiptap h3 {
-  @apply text-xl font-semibold mt-4 mb-1;
-}
-
-.tiptap ul {
-  @apply list-disc pl-6;
-}
-
-.tiptap ol {
-  @apply list-decimal pl-6;
-}
-
-.tiptap li {
-  @apply my-0.5;
-}
-
-.tiptap ul[data-type='taskList'] {
-  @apply list-none pl-0;
-}
-
-.tiptap ul[data-type='taskList'] li {
-  @apply flex items-start gap-2;
-}
-
-.tiptap ul[data-type='taskList'] li > label {
-  @apply mt-1;
-}
-
+.tiptap ul[data-type='taskList'] { @apply list-none pl-0; }
+.tiptap ul[data-type='taskList'] li { @apply flex items-start gap-2; }
+.tiptap ul[data-type='taskList'] li > label { @apply mt-1; }
 .tiptap ul[data-type='taskList'] li > label input[type='checkbox'] {
-  @apply w-4 h-4 rounded border-gray-300 text-accent cursor-pointer accent-accent;
+  @apply w-4 h-4 rounded border-white/20 bg-white/5 text-accent cursor-pointer accent-accent;
 }
-
 .tiptap ul[data-type='taskList'] li[data-checked='true'] > div > p {
-  @apply line-through text-gray-400;
+  @apply line-through text-gray-600;
 }
 
 .tiptap blockquote {
-  @apply border-l-4 border-gray-300 pl-4 italic text-gray-600;
+  @apply border-l-4 border-accent/30 pl-4 italic text-gray-400;
 }
 
 .tiptap pre {
-  @apply bg-gray-900 text-gray-100 rounded-lg p-4 my-2 overflow-x-auto;
+  @apply bg-black/40 text-gray-200 rounded-lg p-4 my-2 overflow-x-auto border border-white/[0.06];
 }
 
-.tiptap pre code {
-  @apply bg-transparent text-inherit text-sm font-mono;
-}
+.tiptap pre code { @apply bg-transparent text-inherit text-sm font-mono; }
 
 .tiptap code {
-  @apply bg-gray-100 text-pink-600 rounded px-1 py-0.5 text-sm font-mono;
+  @apply bg-accent/10 text-indigo-300 rounded px-1 py-0.5 text-sm font-mono;
 }
 
-.tiptap hr {
-  @apply border-t border-gray-200 my-4;
-}
+.tiptap hr { @apply border-t border-white/[0.08] my-4; }
 
 .tiptap a {
-  @apply text-accent underline cursor-pointer;
+  @apply text-accent hover:text-accent-hover underline cursor-pointer transition-colors;
 }
 
-.tiptap img {
-  @apply max-w-full rounded;
-}
+.tiptap img { @apply max-w-full rounded; }
+.tiptap mark { @apply bg-yellow-500/30 text-yellow-200; }
 
-.tiptap mark {
-  @apply bg-yellow-200;
-}
-
-/* Callout block */
 .tiptap .callout {
-  @apply bg-blue-50 border-l-4 border-accent rounded-r-lg p-4 my-2;
+  @apply bg-accent/5 border-l-4 border-accent rounded-r-lg p-4 my-2;
 }
 
-/* Page title input */
+/* Page title */
 .page-title {
-  @apply text-4xl font-bold outline-none border-none w-full placeholder-gray-300 resize-none;
+  @apply text-4xl font-bold outline-none border-none w-full text-white
+    placeholder-gray-600 resize-none bg-transparent;
+}
+
+/* Auth animated bg */
+.auth-bg {
+  background: linear-gradient(-45deg, #06060c, #0c0c20, #0a0a16, #10102a);
+  background-size: 400% 400%;
+  animation: authShift 12s ease infinite;
+}
+@keyframes authShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Glow orbs */
+.glow-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+/* Prose dark overrides */
+.prose {
+  --tw-prose-body: #d1d5db;
+  --tw-prose-headings: #f9fafb;
+  --tw-prose-bold: #f3f4f6;
+  --tw-prose-links: #818cf8;
+  --tw-prose-code: #c7d2fe;
+  --tw-prose-quotes: #9ca3af;
+  --tw-prose-bullets: #6b7280;
+  --tw-prose-counters: #6b7280;
 }

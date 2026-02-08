@@ -6,19 +6,19 @@ import { TASK_STATUS_LABELS } from '../../types'
 const BOARD_COLUMNS: TaskStatus[] = ['not_started', 'in_progress', 'waiting', 'done']
 
 const COLUMN_COLORS: Record<TaskStatus, string> = {
-  not_started: 'bg-gray-200',
+  not_started: 'bg-gray-400',
   in_progress: 'bg-blue-400',
   waiting: 'bg-purple-400',
-  done: 'bg-green-400',
-  cancelled: 'bg-gray-300',
+  done: 'bg-emerald-400',
+  cancelled: 'bg-gray-500',
 }
 
 const PRIORITY_COLORS: Record<TaskPriority, string> = {
   none: '',
-  low: 'text-priority-low',
-  medium: 'text-priority-medium',
-  high: 'text-priority-high',
-  urgent: 'text-priority-urgent',
+  low: 'text-gray-500',
+  medium: 'text-yellow-400',
+  high: 'text-orange-400',
+  urgent: 'text-rose-400',
 }
 
 function formatShortDate(date: string | null) {
@@ -71,14 +71,14 @@ export default function TaskBoard() {
           {/* Column header */}
           <div className="flex items-center gap-2 mb-3 px-1">
             <div className={`w-2 h-2 rounded-full ${COLUMN_COLORS[status]}`} />
-            <span className="text-sm font-medium">
+            <span className="text-sm font-medium text-gray-200">
               {TASK_STATUS_LABELS[status]}
             </span>
-            <span className="text-xs text-gray-400">{tasksByStatus[status].length}</span>
+            <span className="text-xs text-gray-500">{tasksByStatus[status].length}</span>
             <div className="flex-1" />
             <button
               onClick={() => handleAddToColumn(status)}
-              className="p-0.5 rounded hover:bg-gray-200 text-gray-400"
+              className="p-0.5 rounded text-gray-600 hover:text-gray-400 hover:bg-white/[0.06] transition-all duration-200"
             >
               <Plus size={14} />
             </button>
@@ -92,11 +92,11 @@ export default function TaskBoard() {
                 draggable
                 onDragStart={(e) => handleDragStart(e, task.id)}
                 onClick={() => selectTask(task.id)}
-                className="bg-white border border-gray-200 rounded-lg p-3 cursor-pointer hover:border-gray-300 hover:shadow-sm transition-all"
+                className="bg-white/[0.04] border border-white/[0.06] rounded-xl p-3 cursor-pointer hover:bg-white/[0.07] hover:shadow-glow transition-all duration-200"
               >
-                <p className="text-sm mb-2">
+                <p className="text-sm mb-2 text-gray-200">
                   {task.title || (
-                    <span className="text-gray-400 italic">Untitled task</span>
+                    <span className="text-gray-600 italic">Untitled task</span>
                   )}
                 </p>
                 <div className="flex items-center gap-2">
@@ -107,7 +107,7 @@ export default function TaskBoard() {
                     />
                   )}
                   {task.dueDate && (
-                    <span className="text-xs text-gray-400 flex items-center gap-0.5">
+                    <span className="text-xs text-gray-500 flex items-center gap-0.5">
                       <Calendar size={10} />
                       {formatShortDate(task.dueDate)}
                     </span>
