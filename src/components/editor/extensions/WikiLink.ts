@@ -1,5 +1,8 @@
 import { Extension } from '@tiptap/core'
 import Suggestion, { type SuggestionOptions } from '@tiptap/suggestion'
+import { PluginKey } from '@tiptap/pm/state'
+
+const wikiLinkPluginKey = new PluginKey('wikiLink')
 
 export interface WikiLinkItem {
   id: string
@@ -14,6 +17,7 @@ export const WikiLink = Extension.create({
     return {
       suggestion: {
         char: '[[',
+        pluginKey: wikiLinkPluginKey,
         command: ({ editor, range, props }: { editor: any; range: any; props: WikiLinkItem }) => {
           editor
             .chain()
